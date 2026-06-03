@@ -1,8 +1,10 @@
 <?php
+
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BookController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -10,11 +12,21 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Profile
+    /*
+    |--------------------------------------------------------------------------
+    | Profile
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -24,8 +36,47 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
 
-    // Kategori Buku
-    Route::resource('categories', CategoryController::class);
+    /*
+    |--------------------------------------------------------------------------
+    | Kategori Buku
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('categories.index');
+
+    Route::post('/categories', [CategoryController::class, 'store'])
+        ->name('categories.store');
+
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])
+        ->name('categories.update');
+
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
+        ->name('categories.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Daftar Buku
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/books', [BookController::class, 'index'])
+        ->name('books.index');
+
+    Route::get('/books/create', [BookController::class, 'create'])
+        ->name('books.create');
+
+    Route::post('/books', [BookController::class, 'store'])
+        ->name('books.store');
+
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])
+        ->name('books.edit');
+
+    Route::put('/books/{book}', [BookController::class, 'update'])
+        ->name('books.update');
+
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])
+        ->name('books.destroy');
 
 });
 
