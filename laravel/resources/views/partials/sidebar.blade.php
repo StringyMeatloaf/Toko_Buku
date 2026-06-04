@@ -21,13 +21,18 @@
             <span class="font-medium">Dashboard</span>
         </a>
 
-        <a href="{{ route('books.index') }}"
-           class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
-           {{ request()->is('books') ? 'bg-blue-900 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
+        <a href="{{ route('inventory.index') }}"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+            {{ request()->routeIs('inventory.*') ? 'bg-blue-900 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
+
             <span class="material-symbols-outlined">
                 inventory_2
             </span>
-            <span class="font-medium">Inventaris Buku</span>
+
+            <span class="font-medium">
+                Inventaris Buku
+            </span>
+
         </a>
 
         <div class="relative">
@@ -72,7 +77,7 @@
             </div>
         </div>
 
-        <a href="#"
+        <a href="{{ route('reports.index') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-all">
             <span class="material-symbols-outlined">
                 assessment

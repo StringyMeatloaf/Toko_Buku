@@ -15,8 +15,8 @@ return new class extends Migration
         $table->id();
 
         $table->foreignId('book_id')
-              ->constrained()
-              ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
 
         $table->integer('quantity');
         $table->date('sale_date');

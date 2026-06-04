@@ -5,31 +5,29 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage; // Penting untuk hapus file lama
 
 class BookController extends Controller
 {
-    /**
-     * Menampilkan halaman daftar buku
-     */
     public function index()
     {
-        $books = Book::with('category')
-            ->orderBy('title')
-            ->get();
+        $books = Book::with('category')->orderBy('title')->get();
 
-        $categories = Category::orderBy('category_name')
-            ->get();
+        // Menambahkan data statistik untuk view index
+        $totalBooks = $books->count();
+        $totalStock = $books->sum('stock');
+        $totalCategories = Category::count();
+        $criticalStock = Book::where('stock', '<=', 10)->count();
 
-        return view(
-        'master-data.books.index',
-        compact(
-                'books',
-                'categories'
-    )
-);
+        return view('master-data.books.index', compact(
+            'books',
+            'totalBooks',
+            'totalStock',
+            'totalCategories',
+            'criticalStock'
+        ));
     }
-    
-        public function create()
+    public function create()
     {
         $categories = Category::orderBy('category_name')
             ->get();
@@ -38,43 +36,6 @@ class BookController extends Controller
             'master-data.books.form',
             compact('categories')
         );
-    }
-
-    /**
-     * Menyimpan buku baru
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'category_id'      => 'required|exists:categories,id',
-            'title'            => 'required|max:255',
-            'isbn'             => 'nullable|max:255',
-            'author'           => 'required|max:255',
-            'publisher'        => 'nullable|max:255',
-            'publication_year' => 'nullable|integer',
-            'price'            => 'nullable|numeric',
-            'stock'            => 'nullable|integer|min:0',
-            'description'      => 'nullable'
-        ]);
-
-        Book::create([
-            'category_id'      => $request->category_id,
-            'title'            => $request->title,
-            'isbn'             => $request->isbn,
-            'author'           => $request->author,
-            'publisher'        => $request->publisher,
-            'publication_year' => $request->publication_year,
-            'price'            => $request->price ?? 0,
-            'stock'            => $request->stock ?? 0,
-            'description'      => $request->description,
-        ]);
-
-        return redirect()
-            ->route('books.index')
-            ->with(
-                'success',
-                'Buku berhasil ditambahkan'
-            );
     }
 
     public function edit(Book $book)
@@ -90,55 +51,62 @@ class BookController extends Controller
             )
         );
     }
-    /**
-     * Update buku
-     */
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title'       => 'required|max:255',
+            'author'      => 'required|max:255',
+            'cover'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Sesuaikan nama input
+            'price'       => 'required|numeric',
+            'stock'       => 'required|integer|min:0',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('cover')) {
+            // Simpan ke folder 'covers' di dalam storage/app/public
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        Book::create($data);
+
+        return redirect()->route('books.index')->with('success', 'Buku berhasil ditambahkan');
+    }
+
     public function update(Request $request, Book $book)
     {
         $request->validate([
-            'category_id'      => 'required|exists:categories,id',
-            'title'            => 'required|max:255',
-            'isbn'             => 'nullable|max:255',
-            'author'           => 'required|max:255',
-            'publisher'        => 'nullable|max:255',
-            'publication_year' => 'nullable|integer',
-            'price'            => 'nullable|numeric',
-            'stock'            => 'nullable|integer|min:0',
-            'description'      => 'nullable'
+            'category_id' => 'required|exists:categories,id',
+            'title'       => 'required|max:255',
+            'author'      => 'required|max:255',
+            'cover'       => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $book->update([
-            'category_id'      => $request->category_id,
-            'title'            => $request->title,
-            'isbn'             => $request->isbn,
-            'author'           => $request->author,
-            'publisher'        => $request->publisher,
-            'publication_year' => $request->publication_year,
-            'price'            => $request->price ?? 0,
-            'stock'            => $request->stock ?? 0,
-            'description'      => $request->description,
-        ]);
+        $data = $request->all();
 
-        return redirect()
-            ->route('books.index')
-            ->with(
-                'success',
-                'Buku berhasil diupdate'
-            );
+        if ($request->hasFile('cover')) {
+            // Hapus cover lama jika ada
+            if ($book->cover) {
+                Storage::disk('public')->delete($book->cover);
+            }
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        $book->update($data);
+
+        return redirect()->route('books.index')->with('success', 'Buku berhasil diupdate');
     }
 
-    /**
-     * Hapus buku
-     */
     public function destroy(Book $book)
     {
-        $book->delete();
+        // Hapus file gambar dari storage saat data dihapus
+        if ($book->image) {
+            Storage::disk('public')->delete($book->image);
+        }
 
-        return redirect()
-            ->route('books.index')
-            ->with(
-                'success',
-                'Buku berhasil dihapus'
-            );
+        $book->delete();
+        return redirect()->route('books.index')->with('success', 'Buku berhasil dihapus');
     }
 }

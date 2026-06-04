@@ -13,6 +13,11 @@ class BookEntry extends Model
         'notes'
     ];
 
+    public function entries()
+    {
+        return $this->hasMany(BookEntry::class);
+    }
+
     public function book()
     {
         return $this->belongsTo(Book::class);
