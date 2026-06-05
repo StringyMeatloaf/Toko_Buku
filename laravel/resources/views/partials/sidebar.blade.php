@@ -70,7 +70,7 @@
                     Kategori Buku
                 </a>
 
-                <a href="#" 
+                <a href="{{ route('users.index') }}" 
                    class="py-2 px-3 text-sm text-gray-500 rounded-md hover:text-blue-900 hover:bg-gray-50 transition-colors">
                     Manajemen Pengguna
                 </a>

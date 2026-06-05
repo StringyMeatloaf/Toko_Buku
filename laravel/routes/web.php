@@ -8,6 +8,7 @@
     use App\Http\Controllers\BookEntryController;
     use App\Http\Controllers\InventoryController;
     use App\Http\Controllers\ReportController;
+    use App\Http\Controllers\UserController;
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -106,20 +107,20 @@
             ->name('book-entries.destroy');
 
         Route::get('/inventory', [InventoryController::class, 'index'])
-        ->name('inventory.index');
+            ->name('inventory.index');
 
         Route::get('/inventory/create', [InventoryController::class, 'create'])
-    ->name('inventory.create');
+            ->name('inventory.create');
 
         Route::get('/inventory', [InventoryController::class, 'index'])
-        ->name('inventory.index');
+            ->name('inventory.index');
 
         Route::get('/inventory/create', [InventoryController::class, 'create'])
             ->name('inventory.create');
 
         Route::post('/inventory', [InventoryController::class, 'store'])
             ->name('inventory.store');
-        
+
         /*
 |--------------------------------------------------------------------------
 | Laporan
@@ -129,6 +130,26 @@
         Route::get('/reports', [ReportController::class, 'index'])
             ->name('reports.index');
 
+        Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])
+            ->name('reports.export.pdf');
     });
 
-    require __DIR__.'/auth.php';
+    /*
+|--------------------------------------------------------------------------
+| Manajemen Pengguna
+|--------------------------------------------------------------------------
+*/
+
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
+
+    Route::post('/users', [UserController::class, 'store'])
+        ->name('users.store');
+
+    Route::put('/users/{user}', [UserController::class, 'update'])
+        ->name('users.update');
+
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])
+        ->name('users.destroy');
+
+    require __DIR__ . '/auth.php';

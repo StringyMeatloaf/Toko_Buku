@@ -18,16 +18,16 @@
 
     </div>
 
-    <button
-        class="bg-blue-900 text-white px-5 py-3 rounded-xl flex items-center gap-2 hover:bg-blue-800 transition-all">
+    <a href="{{ route('reports.export.pdf', request()->query()) }}"
+   class="bg-blue-900 text-white px-5 py-3 rounded-xl flex items-center gap-2 hover:bg-blue-800">
 
-        <span class="material-symbols-outlined">
-            picture_as_pdf
-        </span>
+    <span class="material-symbols-outlined">
+        picture_as_pdf
+    </span>
 
-        Export PDF
+    Export PDF
 
-    </button>
+</a>
 
 </div>
 
