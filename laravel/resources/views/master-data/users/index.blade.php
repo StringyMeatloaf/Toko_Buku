@@ -191,16 +191,22 @@
                 <td class="p-4 text-center">
 
                     <div class="flex justify-center gap-4">
+                    
+                    {{-- Tombol Detail (Mata Biru) --}}
+<button type="button"
+    onclick="document.getElementById('detailUser{{ $user->id }}').classList.remove('hidden')"
+    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+    title="Detail User">
+    <span class="material-symbols-outlined block">visibility</span>
+</button>
 
-                        <button
+{{-- Tombol Edit (Pensil Oren) --}}
+<button type="button"
     onclick="document.getElementById('editUser{{ $user->id }}').classList.remove('hidden')"
-    class="text-blue-600 hover:text-blue-900">
-
-                            <span class="material-symbols-outlined">
-                                edit
-                            </span>
-
-                        </button>
+    class="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors"
+    title="Edit User">
+    <span class="material-symbols-outlined block">edit</span>
+</button>
 
                         <form
                             action="{{ route('users.destroy', $user->id) }}"
@@ -227,6 +233,136 @@
                 </td>
 
             </tr>
+            {{-- Modal Detail User --}}
+<div id="detailUser{{ $user->id }}"
+     class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50">
+
+    <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden m-4">
+
+        {{-- Header --}}
+        <div class="flex justify-between items-center p-6 border-b bg-slate-50">
+
+            <div>
+
+                <h2 class="text-xl font-bold text-slate-900">
+                    Detail Pengguna
+                </h2>
+
+                <p class="text-xs text-gray-500 mt-1">
+                    Informasi akun administrator
+                </p>
+
+            </div>
+
+            <button
+                onclick="document.getElementById('detailUser{{ $user->id }}').classList.add('hidden')"
+                class="text-gray-400 hover:text-slate-700">
+
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+
+            </button>
+
+        </div>
+
+        {{-- Body --}}
+        <div class="p-8">
+
+            <div class="flex flex-col items-center mb-6">
+
+                <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center">
+
+                    <span class="material-symbols-outlined text-5xl text-blue-900">
+                        person
+                    </span>
+
+                </div>
+
+                <h3 class="text-2xl font-bold mt-4">
+                    {{ $user->name }}
+                </h3>
+
+                <p class="text-gray-500">
+                    {{ $user->email }}
+                </p>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+
+                {{-- Role --}}
+                <div class="bg-slate-50 p-4 rounded-xl border">
+
+                    <p class="text-xs uppercase text-gray-400 font-bold">
+                        Role
+                    </p>
+
+                    <p class="text-lg font-semibold text-blue-900 mt-2">
+                        {{ $user->role }}
+                    </p>
+
+                </div>
+
+                {{-- Status --}}
+                <div class="bg-slate-50 p-4 rounded-xl border">
+
+                    <p class="text-xs uppercase text-gray-400 font-bold">
+                        Status
+                    </p>
+
+                    <div class="mt-2">
+
+                        @if($user->is_active)
+
+                            <span class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                                Aktif
+                            </span>
+
+                        @else
+
+                            <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold">
+                                Nonaktif
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="mt-6">
+
+                <p class="text-xs uppercase text-gray-400 font-bold mb-2">
+                    Dibuat Pada
+                </p>
+
+                <p class="text-slate-700">
+                    {{ $user->created_at->format('d F Y H:i') }}
+                </p>
+
+            </div>
+
+        </div>
+
+        {{-- Footer --}}
+        <div class="p-4 border-t bg-slate-50 flex justify-end">
+
+            <button
+                onclick="document.getElementById('detailUser{{ $user->id }}').classList.add('hidden')"
+                class="px-5 py-2 bg-slate-200 hover:bg-slate-300 rounded-lg font-semibold">
+
+                Tutup
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
             <div id="editUser{{ $user->id }}" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 transition-all">
     <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all m-4">
         
