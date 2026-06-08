@@ -26,7 +26,6 @@
         <div class="bg-white p-6 rounded-xl shadow-sm border">
             <div class="flex justify-between mb-4">
                 <span class="material-symbols-outlined p-3 bg-blue-100 rounded-lg text-blue-900">menu_book</span>
-                <span class="text-green-600 font-semibold">+12%</span>
             </div>
             <p class="text-gray-500 text-sm">Total Judul</p>
             <h3 class="text-4xl font-bold">{{ $totalBooks ?? 0 }}</h3>
