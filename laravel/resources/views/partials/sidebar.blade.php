@@ -78,11 +78,17 @@
         </div>
 
         <a href="{{ route('reports.index') }}"
-           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-100 transition-all">
+            class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+            {{ request()->routeIs('reports.*') ? 'bg-blue-900 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100' }}">
+
             <span class="material-symbols-outlined">
-                assessment
+                Assessment
             </span>
-            <span class="font-medium">Laporan</span>
+
+            <span class="font-medium">
+                Laporan
+            </span>
+
         </a>
 
         <div class="mt-auto pt-10 border-t border-gray-100">

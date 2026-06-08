@@ -227,127 +227,77 @@
                 </td>
 
             </tr>
-            <div id="editUser{{ $user->id }}"
-     class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
-    <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl">
-
-        <div class="flex justify-between items-center p-6 border-b">
-
-            <h2 class="text-2xl font-bold">
-                Edit Pengguna
-            </h2>
-
-            <button
-                onclick="document.getElementById('editUser{{ $user->id }}').classList.add('hidden')">
-
-                <span class="material-symbols-outlined">
-                    close
-                </span>
-
+            <div id="editUser{{ $user->id }}" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 transition-all">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all m-4">
+        
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-slate-50">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">Edit Akses Pengguna</h2>
+                <p class="text-xs text-gray-500 mt-1">Perbarui data atau hak akses dari {{ $user->name }}</p>
+            </div>
+            <button onclick="document.getElementById('editUser{{ $user->id }}').classList.add('hidden')" 
+                    class="text-gray-400 hover:text-slate-700 p-2 hover:bg-gray-200/60 rounded-lg transition-all">
+                <span class="material-symbols-outlined block">close</span>
             </button>
-
         </div>
 
-        <form
-            action="{{ route('users.update', $user->id) }}"
-            method="POST"
-            class="p-6">
-
+        <form action="{{ route('users.update', $user->id) }}" method="POST" class="p-6">
             @csrf
             @method('PUT')
 
-            <div class="space-y-4">
+            <div class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Nama Lengkap</label>
+                        <input type="text" name="name" value="{{ $user->name }}" 
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Alamat Email</label>
+                        <input type="email" name="email" value="{{ $user->email }}" 
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
+                </div>
 
-                <input
-                    type="text"
-                    name="name"
-                    value="{{ $user->name }}"
-                    class="w-full border rounded-xl p-3">
+                <div>
+                    <label class="block mb-1 text-sm font-semibold text-slate-700">Password Baru</label>
+                    <p class="text-xs text-gray-400 mb-1.5">Kosongkan kolom ini jika tidak ingin mengubah password.</p>
+                    <input type="password" name="password" placeholder="••••••••" 
+                           class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all">
+                </div>
 
-                <input
-                    type="email"
-                    name="email"
-                    value="{{ $user->email }}"
-                    class="w-full border rounded-xl p-3">
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Kosongkan jika tidak diubah"
-                    class="w-full border rounded-xl p-3">
-
-                <select
-                    name="role"
-                    class="w-full border rounded-xl p-3">
-
-                    <option
-                        value="Administrator"
-                        {{ $user->role == 'Administrator' ? 'selected' : '' }}>
-
-                        Administrator
-
-                    </option>
-
-                    <option
-                        value="Petugas"
-                        {{ $user->role == 'Petugas' ? 'selected' : '' }}>
-
-                        Petugas
-
-                    </option>
-
-                </select>
-
-                <select
-                    name="is_active"
-                    class="w-full border rounded-xl p-3">
-
-                    <option
-                        value="1"
-                        {{ $user->is_active ? 'selected' : '' }}>
-
-                        Aktif
-
-                    </option>
-
-                    <option
-                        value="0"
-                        {{ !$user->is_active ? 'selected' : '' }}>
-
-                        Nonaktif
-
-                    </option>
-
-                </select>
-
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Hak Akses / Role</label>
+                        <select name="role" class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all bg-white">
+                            <option value="Administrator" {{ $user->role == 'Administrator' ? 'selected' : '' }}>Administrator</option>
+                            <option value="Petugas" {{ $user->role == 'Petugas' ? 'selected' : '' }}>Petugas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Status Akun</label>
+                        <select name="is_active" class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all bg-white">
+                            <option value="1" {{ $user->is_active ? 'selected' : '' }}>Aktif</option>
+                            <option value="0" {{ !$user->is_active ? 'selected' : '' }}>Nonaktif</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex justify-end gap-3 mt-6">
-
-                <button
-                    type="button"
-                    onclick="document.getElementById('editUser{{ $user->id }}').classList.add('hidden')"
-                    class="px-5 py-3 bg-gray-200 rounded-xl">
-
+            <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
+                <button type="button" onclick="document.getElementById('editUser{{ $user->id }}').classList.add('hidden')" 
+                        class="px-5 py-3 bg-gray-100 hover:bg-gray-200 text-slate-700 font-medium rounded-xl transition-all">
                     Batal
-
                 </button>
-
-                <button
-                    type="submit"
-                    class="px-5 py-3 bg-blue-900 text-white rounded-xl">
-
-                    Update
-
+                <button type="submit" 
+                        class="px-5 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-xl flex items-center gap-2 shadow-sm transition-all">
+                    <span class="material-symbols-outlined text-xl">save</span>
+                    Simpan Perubahan
                 </button>
-
             </div>
-
         </form>
 
     </div>
-
 </div>
 
             @empty
@@ -373,175 +323,82 @@
 
 {{-- Modal Tambah User --}}
 
-<div id="userModal"
-    class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
-    <div class="bg-white w-full max-w-xl rounded-2xl shadow-xl">
-
-        <div class="flex justify-between items-center p-6 border-b">
-
-            <h2 class="text-2xl font-bold">
-                Tambah Pengguna
-            </h2>
-
-            <button
-                onclick="document.getElementById('userModal').classList.add('hidden')">
-
-                <span class="material-symbols-outlined">
-                    close
-                </span>
-
+<div id="userModal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 transition-all">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl border border-gray-100 overflow-hidden transform transition-all m-4">
+        
+        <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-slate-50">
+            <div>
+                <h2 class="text-xl font-bold text-slate-900">Tambah Akun Baru</h2>
+                <p class="text-xs text-gray-500 mt-1">Dafrarkan pengguna/administrator sistem baru ke dalam database.</p>
+            </div>
+            <button onclick="document.getElementById('userModal').classList.add('hidden')" 
+                    class="text-gray-400 hover:text-slate-700 p-2 hover:bg-gray-200/60 rounded-lg transition-all">
+                <span class="material-symbols-outlined block">close</span>
             </button>
-
         </div>
 
-        <form action="{{ route('users.store') }}"
-            method="POST"
-            class="p-6">
-
+        <form action="{{ route('users.store') }}" method="POST" class="p-6">
             @csrf
 
-            <div class="space-y-4">
-
-                {{-- Nama --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Nama Lengkap
-                    </label>
-
-                    <input
-                        type="text"
-                        name="name"
-                        class="w-full border rounded-xl p-3"
-                        required>
-
+            <div class="space-y-5">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Nama Lengkap</label>
+                        <input type="text" name="name" placeholder="Contoh: John Doe"
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Alamat Email</label>
+                        <input type="email" name="email" placeholder="contoh@domain.com"
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
                 </div>
 
-                {{-- Email --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        name="email"
-                        class="w-full border rounded-xl p-3"
-                        required>
-
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Password</label>
+                        <input type="password" name="password" placeholder="Minimal 8 karakter"
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Konfirmasi Password</label>
+                        <input type="password" name="password_confirmation" placeholder="Ulangi password"
+                               class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all" required>
+                    </div>
                 </div>
 
-                {{-- Password --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password"
-                        class="w-full border rounded-xl p-3"
-                        required>
-
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Hak Akses / Role</label>
+                        <select name="role" class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all bg-white">
+                            <option value="Administrator">Administrator</option>
+                            <option value="Petugas">Petugas</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1.5 text-sm font-semibold text-slate-700">Status Awal</label>
+                        <select name="is_active" class="w-full border border-gray-300 rounded-xl p-3 text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/20 focus:border-blue-900 transition-all bg-white">
+                            <option value="1">Aktif</option>
+                            <option value="0">Nonaktif</option>
+                        </select>
+                    </div>
                 </div>
-
-                {{-- Konfirmasi Password --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Konfirmasi Password
-                    </label>
-
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        class="w-full border rounded-xl p-3"
-                        required>
-
-                </div>
-
-                {{-- Role --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Role
-                    </label>
-
-                    <select
-                        name="role"
-                        class="w-full border rounded-xl p-3">
-
-                        <option value="Administrator">
-                            Administrator
-                        </option>
-
-                        <option value="Petugas">
-                            Petugas
-                        </option>
-
-                    </select>
-
-                </div>
-
-                {{-- Status --}}
-
-                <div>
-
-                    <label class="block mb-2 font-medium">
-                        Status
-                    </label>
-
-                    <select
-                        name="is_active"
-                        class="w-full border rounded-xl p-3">
-
-                        <option value="1">
-                            Aktif
-                        </option>
-
-                        <option value="0">
-                            Nonaktif
-                        </option>
-
-                    </select>
-
-                </div>
-
             </div>
 
-            <div class="flex justify-end gap-3 mt-6">
-
-                <button
-                    type="button"
-                    onclick="document.getElementById('userModal').classList.add('hidden')"
-                    class="px-5 py-3 bg-gray-200 rounded-xl">
-
+            <div class="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-100">
+                <button type="button" onclick="document.getElementById('userModal').classList.add('hidden')" 
+                        class="px-5 py-3 bg-gray-100 hover:bg-gray-200 text-slate-700 font-medium rounded-xl transition-all">
                     Batal
-
                 </button>
-
-                <button
-                    type="submit"
-                    class="px-5 py-3 bg-blue-900 text-white rounded-xl">
-
-                    Simpan
-
+                <button type="submit" 
+                        class="px-5 py-3 bg-blue-900 hover:bg-blue-800 text-white font-medium rounded-xl flex items-center gap-2 shadow-sm transition-all">
+                    <span class="material-symbols-outlined text-xl">person_add</span>
+                    Simpan Pengguna
                 </button>
-
             </div>
-
         </form>
 
     </div>
-
 </div>
 
 @endsection

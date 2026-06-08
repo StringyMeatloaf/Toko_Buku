@@ -13,7 +13,7 @@ class InventoryController extends Controller
     /**
      * Halaman Inventaris Buku
      */
-    public function index()
+    public function index(Request $request)
     {
         /*
         |--------------------------------------------------------------------------
@@ -91,6 +91,67 @@ class InventoryController extends Controller
             ->sortByDesc('date')
             ->values();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Search
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('search'))
+        {
+            $transactions = $transactions->filter(function ($transaction) use ($request) {
+
+                return str_contains(
+                    strtolower($transaction['book']->title),
+                    strtolower($request->search)
+                );
+
+            });
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Tipe Transaksi
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('type'))
+        {
+            $transactions = $transactions->where(
+                'type',
+                $request->type
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Status Stok
+        |--------------------------------------------------------------------------
+        */
+
+        if ($request->filled('status'))
+        {
+            $transactions = $transactions->filter(function ($transaction) use ($request) {
+
+                $stock = $transaction['stock'];
+
+                switch ($request->status)
+                {
+                    case 'Tersedia':
+                        return $stock > 10;
+
+                    case 'Stok Rendah':
+                        return $stock > 0 && $stock <= 10;
+
+                    case 'Habis':
+                        return $stock == 0;
+
+                    default:
+                        return true;
+                }
+            });
+        }
+
         return view(
             'inventory.index',
             compact(
@@ -128,7 +189,6 @@ class InventoryController extends Controller
             'book_id' => 'required|exists:books,id',
             'quantity' => 'required|integer|min:1',
             'transaction_date' => 'required|date',
-            'sale_price' => 'nullable|numeric|min:0',
             'notes' => 'nullable'
         ]);
 
@@ -190,7 +250,6 @@ class InventoryController extends Controller
                     'book_id' => $request->book_id,
                     'quantity' => $request->quantity,
                     'sale_date' => $request->transaction_date,
-                    'sale_price' => $request->sale_price,
                     'notes' => $request->notes
                 ]);
 

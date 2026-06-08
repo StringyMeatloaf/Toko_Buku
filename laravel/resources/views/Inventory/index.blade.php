@@ -127,7 +127,9 @@
 
 {{-- Filter --}}
 
-<div class="bg-white p-4 rounded-xl border shadow-sm mb-6">
+<form method="GET"
+      action="{{ route('inventory.index') }}"
+      class="bg-white p-4 rounded-xl border shadow-sm mb-6">
 
     <div class="flex flex-wrap gap-4 items-center">
 
@@ -135,31 +137,69 @@
 
             <input
                 type="text"
+                name="search"
+                value="{{ request('search') }}"
                 placeholder="Cari buku..."
                 class="w-full border rounded-lg p-3">
 
         </div>
 
-        <select class="border rounded-lg p-3">
+        <select
+            name="type"
+            class="border rounded-lg p-3">
 
-            <option>Semua Transaksi</option>
-            <option>Masuk</option>
-            <option>Keluar</option>
+            <option value="">
+                Semua Transaksi
+            </option>
+
+            <option value="Masuk"
+                {{ request('type') == 'Masuk' ? 'selected' : '' }}>
+                Masuk
+            </option>
+
+            <option value="Keluar"
+                {{ request('type') == 'Keluar' ? 'selected' : '' }}>
+                Keluar
+            </option>
 
         </select>
 
-        <select class="border rounded-lg p-3">
+        <select
+            name="status"
+            class="border rounded-lg p-3">
 
-            <option>Semua Status</option>
-            <option>Tersedia</option>
-            <option>Stok Rendah</option>
-            <option>Habis</option>
+            <option value="">
+                Semua Status
+            </option>
+
+            <option value="Tersedia"
+                {{ request('status') == 'Tersedia' ? 'selected' : '' }}>
+                Tersedia
+            </option>
+
+            <option value="Stok Rendah"
+                {{ request('status') == 'Stok Rendah' ? 'selected' : '' }}>
+                Stok Rendah
+            </option>
+
+            <option value="Habis"
+                {{ request('status') == 'Habis' ? 'selected' : '' }}>
+                Habis
+            </option>
 
         </select>
+
+        <button
+            type="submit"
+            class="bg-blue-900 text-white px-5 py-3 rounded-lg">
+
+            Filter
+
+        </button>
 
     </div>
 
-</div>
+</form>
 
 {{-- Tabel Inventaris --}}
 
